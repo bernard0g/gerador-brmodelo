@@ -1,0 +1,149 @@
+{
+  "entities": [
+    { "name": "Autor", "x": 80, "y": 220 },
+    { "name": "Editora", "x": 80, "y": 520 },
+
+    { "name": "Obra", "x": 420, "y": 220 },
+    { "name": "Livro", "x": 760, "y": 80 },
+    { "name": "Periodico", "x": 760, "y": 280 },
+    { "name": "Exemplar", "x": 760, "y": 520 },
+
+    { "name": "Usuario", "x": 1260, "y": 120 },
+    { "name": "Aluno", "x": 1560, "y": 20 },
+    { "name": "Professor", "x": 1560, "y": 120 },
+    { "name": "Funcionario", "x": 1560, "y": 220 },
+    { "name": "Publico_Externo", "x": 1560, "y": 320 },
+
+    { "name": "Emprestimo", "x": 1260, "y": 460 },
+    { "name": "Reserva", "x": 1260, "y": 650 },
+    { "name": "Multa", "x": 1560, "y": 560 }
+  ],
+  "relationships": [
+    {
+      "name": "Escreve",
+      "x": 240,
+      "y": 220,
+      "connections": [
+        { "entity": "Autor", "cardinality": "(0,n)" },
+        { "entity": "Obra", "cardinality": "(1,n)" }
+      ]
+    },
+    {
+      "name": "Publica",
+      "x": 240,
+      "y": 430,
+      "connections": [
+        { "entity": "Editora", "cardinality": "(1,n)" },
+        { "entity": "Obra", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Eh_Livro",
+      "x": 590,
+      "y": 120,
+      "connections": [
+        { "entity": "Obra", "cardinality": "(1,1)" },
+        { "entity": "Livro", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Eh_Periodico",
+      "x": 590,
+      "y": 280,
+      "connections": [
+        { "entity": "Obra", "cardinality": "(1,1)" },
+        { "entity": "Periodico", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Possui",
+      "x": 590,
+      "y": 500,
+      "connections": [
+        { "entity": "Obra", "cardinality": "(1,n)" },
+        { "entity": "Exemplar", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Especializa_Aluno",
+      "x": 1420,
+      "y": 60,
+      "connections": [
+        { "entity": "Usuario", "cardinality": "(1,1)" },
+        { "entity": "Aluno", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Especializa_Professor",
+      "x": 1420,
+      "y": 140,
+      "connections": [
+        { "entity": "Usuario", "cardinality": "(1,1)" },
+        { "entity": "Professor", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Especializa_Funcionario",
+      "x": 1420,
+      "y": 240,
+      "connections": [
+        { "entity": "Usuario", "cardinality": "(1,1)" },
+        { "entity": "Funcionario", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Especializa_Publico_Externo",
+      "x": 1420,
+      "y": 340,
+      "connections": [
+        { "entity": "Usuario", "cardinality": "(1,1)" },
+        { "entity": "Publico_Externo", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Realiza",
+      "x": 1090,
+      "y": 360,
+      "connections": [
+        { "entity": "Usuario", "cardinality": "(0,n)" },
+        { "entity": "Emprestimo", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Refere_Exemplar",
+      "x": 1000,
+      "y": 520,
+      "connections": [
+        { "entity": "Exemplar", "cardinality": "(0,n)" },
+        { "entity": "Emprestimo", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Gera",
+      "x": 1420,
+      "y": 500,
+      "connections": [
+        { "entity": "Emprestimo", "cardinality": "(0,1)" },
+        { "entity": "Multa", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Faz",
+      "x": 1100,
+      "y": 650,
+      "connections": [
+        { "entity": "Usuario", "cardinality": "(0,n)" },
+        { "entity": "Reserva", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Reserva_Obra",
+      "x": 960,
+      "y": 720,
+      "connections": [
+        { "entity": "Obra", "cardinality": "(0,n)" },
+        { "entity": "Reserva", "cardinality": "(1,1)" }
+      ]
+    }
+  ]
+}
