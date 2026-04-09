@@ -29,6 +29,13 @@ def validate_json(data):
         for conn in r.get("connections", []):
             if conn["entity"] not in ent_names:
                 raise ValueError(f"Relacionamento '{r['name']}' aponta para entidade inexistente: {conn['entity']}")
+            
+            # Normalize cardinality to dict
+            card = conn.get("cardinality")
+            if isinstance(card, str):
+                conn["cardinality"] = {"value": card}
+            elif not isinstance(card, dict):
+                conn["cardinality"] = {"value": "(0,n)"}
     
     for g in generalizations:
         if g.get("supertype") not in ent_names:
@@ -36,6 +43,36 @@ def validate_json(data):
         for sub in g.get("subtypes", []):
             if sub not in ent_names:
                 raise ValueError(f"Especializacao aponta para subtypo inexistente: {sub}")
+
+def intersects(rect1, rect2):
+    return not (rect1['x'] + rect1['w'] < rect2['x'] or
+                rect2['x'] + rect2['w'] < rect1['x'] or
+                rect1['y'] + rect1['h'] < rect2['y'] or
+                rect2['y'] + rect2['h'] < rect1['y'])
+
+def find_free_pos(x, y, w, h, placed_rects, step=20):
+    radius = 0
+    angle = 0
+    
+    while True:
+        cx = int(x + radius * math.cos(angle))
+        cy = int(y + radius * math.sin(angle))
+        test_rect = {"x": cx, "y": cy, "w": w, "h": h}
+        
+        collision = False
+        for r in placed_rects:
+            if intersects(test_rect, r):
+                collision = True
+                break
+        
+        if not collision:
+            placed_rects.append(test_rect)
+            return cx, cy
+            
+        angle += 0.5
+        if angle >= 2 * math.pi:
+            angle = 0
+            radius += step
 
 def auto_layout(data):
     settings = data.get("settings", {})
@@ -48,35 +85,74 @@ def auto_layout(data):
     for e in entities:
         if "x" not in e or "y" not in e: do_auto = True
 
-    if not do_auto: return data
-
     ent_count = len(entities)
     center_x, center_y = 600, 400
     radius = max(300, ent_count * 50)
+    
+    placed_rects = [] # Para evitar colisões de cardinalidade
 
-    for i, e in enumerate(entities):
-        angle = (2 * math.pi * i) / ent_count if ent_count > 0 else 0
-        e["x"] = int(center_x + radius * math.cos(angle))
-        e["y"] = int(center_y + radius * math.sin(angle))
-        
+    if do_auto:
+        for i, e in enumerate(entities):
+            angle = (2 * math.pi * i) / ent_count if ent_count > 0 else 0
+            e["x"] = int(center_x + radius * math.cos(angle))
+            e["y"] = int(center_y + radius * math.sin(angle))
+            
     ent_map = {e["name"]: e for e in entities}
+    
+    # Adicionar entidades ao grid de colisão
+    for e in entities:
+        placed_rects.append({"x": e["x"], "y": e["y"], "w": 120, "h": 58})
 
     for r in relationships:
         conns = r.get("connections", [])
-        if not conns:
-            r["x"], r["y"] = center_x, center_y
-            continue
-        avg_x = sum(ent_map[c["entity"]].get("x", center_x) for c in conns) / len(conns)
-        avg_y = sum(ent_map[c["entity"]].get("y", center_y) for c in conns) / len(conns)
-        r["x"], r["y"] = int(avg_x), int(avg_y)
+        if do_auto:
+            if not conns:
+                r["x"], r["y"] = center_x, center_y
+            else:
+                avg_x = sum(ent_map[c["entity"]].get("x", center_x) for c in conns) / len(conns)
+                avg_y = sum(ent_map[c["entity"]].get("y", center_y) for c in conns) / len(conns)
+                r["x"], r["y"] = int(avg_x), int(avg_y)
+                
+        placed_rects.append({"x": r.get("x", center_x), "y": r.get("y", center_y), "w": 150, "h": 50})
 
-    for g in generalizations:
-        supertype = g.get("supertype")
-        if supertype in ent_map:
-            sx, sy = ent_map[supertype].get("x", center_x), ent_map[supertype].get("y", center_y)
-            g["x"], g["y"] = sx, sy + 150
-        else:
-            g["x"], g["y"] = center_x, center_y
+    if do_auto:
+        for g in generalizations:
+            supertype = g.get("supertype")
+            if supertype in ent_map:
+                sx, sy = ent_map[supertype].get("x", center_x), ent_map[supertype].get("y", center_y)
+                g["x"], g["y"] = sx, sy + 150
+            else:
+                g["x"], g["y"] = center_x, center_y
+
+    # Tratar fallback de cardinalidades
+    for r in relationships:
+        rx, ry = r.get("x", center_x), r.get("y", center_y)
+        conns = r.get("connections", [])
+        for c in conns:
+            card = c.get("cardinality", {"value": "(0,n)"})
+            ent_name = c["entity"]
+            ent = ent_map.get(ent_name)
+            if not ent: continue
+            
+            ex, ey = ent.get("x", center_x), ent.get("y", center_y)
+            
+            if "x" not in card or "y" not in card:
+                # Calcular midpoint entre entidade e relacionamento
+                mid_x = (ex + rx) / 2
+                mid_y = (ey + ry) / 2
+                
+                # Offset ortogonal simples
+                dx, dy = rx - ex, ry - ey
+                length = math.hypot(dx, dy)
+                if length == 0: length = 1
+                nx, ny = -dy / length, dx / length # vector normal
+                
+                # Coloca 20 pixels deslocado da linha
+                target_x = int(mid_x + nx * 20)
+                target_y = int(mid_y + ny * 20)
+                
+                cx, cy = find_free_pos(target_x, target_y, 40, 20, placed_rects, step=15)
+                card["x"], card["y"] = cx, cy
 
     return data
     
@@ -151,17 +227,21 @@ public class BrmAutoGenerator {
         is_identifying = "true" if rel.get("identifying", False) else "false"
         for j, conn in enumerate(rel.get("connections", [])):
             ent_name = conn["entity"]
-            card = conn.get("cardinality", "(0,n)")
+            card_obj = conn.get("cardinality", {"value": "(0,n)"})
+            card_val = card_obj.get("value", "(0,n)")
+            card_x = card_obj.get("x", x)
+            card_y = card_obj.get("y", y)
+            
             ent_var = entities_map.get(ent_name)
             
             if ent_var:
                 is_weak = "true" if next((e for e in data.get("entities", []) if e["name"] == ent_name), {}).get("weak", False) else "false"
                 # Enum parse
                 card_enum = "PreCardinalidade.TiposCard.C0N"
-                if card in ["(0,1)", "0,1", "0..1"]: card_enum = "PreCardinalidade.TiposCard.C01"
-                elif card in ["(1,1)", "1,1", "1..1"]: card_enum = "PreCardinalidade.TiposCard.C11"
-                elif card in ["(1,n)", "1,n", "1..n"]: card_enum = "PreCardinalidade.TiposCard.C1N"
-                elif card in ["(n,1)", "n,1", "n..1"]: card_enum = "PreCardinalidade.TiposCard.C1N"
+                if card_val in ["(0,1)", "0,1", "0..1"]: card_enum = "PreCardinalidade.TiposCard.C01"
+                elif card_val in ["(1,1)", "1,1", "1..1"]: card_enum = "PreCardinalidade.TiposCard.C11"
+                elif card_val in ["(1,n)", "1,n", "1..n"]: card_enum = "PreCardinalidade.TiposCard.C1N"
+                elif card_val in ["(n,1)", "n,1", "n..1"]: card_enum = "PreCardinalidade.TiposCard.C1N"
                 
                 java_code += f"""
             Ligacao lig_{i}_{j} = new Ligacao(dia);
@@ -173,6 +253,8 @@ public class BrmAutoGenerator {
             lig_{i}_{j}.PrepareCardinalidade();
             if (lig_{i}_{j}.getCard() != null) {{
                 lig_{i}_{j}.getCard().setCard({card_enum});
+                lig_{i}_{j}.getCard().setMovimentacaoManual(true);
+                lig_{i}_{j}.getCard().setLocation({card_x}, {card_y});
             }}
             if ({is_weak} || {is_identifying}) {{
                 lig_{i}_{j}.setDuplaLinha(true);

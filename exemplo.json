@@ -1,16 +1,195 @@
 {
+  "settings": {
+    "autoLayout": false
+  },
   "entities": [
-    { "name": "Cliente", "x": 100, "y": 100 },
-    { "name": "Produto", "x": 400, "y": 100 }
+    { "name": "Autor", "x": 100, "y": 100 },
+    { "name": "Editora", "x": 500, "y": 100 },
+    { "name": "Tema", "x": 900, "y": 100 },
+
+    { "name": "Obra", "x": 500, "y": 400 },
+    { "name": "Livro", "x": 200, "y": 700 },
+    { "name": "Periodico", "x": 800, "y": 700 },
+
+    { "name": "Exemplar", "x": 500, "y": 1000 },
+
+    { "name": "Usuario", "x": 1600, "y": 400 },
+    { "name": "Aluno", "x": 1300, "y": 700 },
+    { "name": "Professor", "x": 1600, "y": 700 },
+    { "name": "Funcionario", "x": 1900, "y": 700 },
+    { "name": "PublicoExterno", "x": 2200, "y": 700 },
+
+    { "name": "Emprestimo", "x": 1400, "y": 1000 },
+    { "name": "Reserva", "x": 1800, "y": 1000 },
+
+    { "name": "Multa", "x": 1400, "y": 1300 },
+    { "name": "Renovacao", "x": 1800, "y": 1300 },
+    { "name": "ConsultaLocal", "x": 2200, "y": 1000 },
+
+    { "name": "PeriodoLetivo", "x": 800, "y": 1300 }
   ],
+
   "relationships": [
     {
-      "name": "Compra",
+      "name": "Escreve",
       "x": 250,
-      "y": 250,
+      "y": 200,
       "connections": [
-        { "entity": "Cliente", "cardinality": "(0,n)" },
-        { "entity": "Produto", "cardinality": "(0,n)" }
+        { "entity": "Autor", "cardinality": "(0,n)" },
+        { "entity": "Obra", "cardinality": "(1,n)" }
+      ]
+    },
+    {
+      "name": "Publica",
+      "x": 500,
+      "y": 200,
+      "connections": [
+        { "entity": "Editora", "cardinality": "(0,n)" },
+        { "entity": "Obra", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Classifica",
+      "x": 800,
+      "y": 200,
+      "connections": [
+        { "entity": "Tema", "cardinality": "(0,n)" },
+        { "entity": "Obra", "cardinality": "(1,n)" }
+      ]
+    },
+
+    {
+      "name": "TipoLivro",
+      "x": 300,
+      "y": 550,
+      "connections": [
+        { "entity": "Obra", "cardinality": "(1,1)" },
+        { "entity": "Livro", "cardinality": "(0,1)" }
+      ]
+    },
+    {
+      "name": "TipoPeriodico",
+      "x": 700,
+      "y": 550,
+      "connections": [
+        { "entity": "Obra", "cardinality": "(1,1)" },
+        { "entity": "Periodico", "cardinality": "(0,1)" }
+      ]
+    },
+
+    {
+      "name": "Materializa",
+      "x": 500,
+      "y": 850,
+      "connections": [
+        { "entity": "Obra", "cardinality": "(1,1)" },
+        { "entity": "Exemplar", "cardinality": "(0,n)" }
+      ]
+    },
+
+    {
+      "name": "EspecializaAluno",
+      "x": 1400,
+      "y": 550,
+      "connections": [
+        { "entity": "Usuario", "cardinality": "(1,1)" },
+        { "entity": "Aluno", "cardinality": "(0,1)" }
+      ]
+    },
+    {
+      "name": "EspecializaProfessor",
+      "x": 1600,
+      "y": 550,
+      "connections": [
+        { "entity": "Usuario", "cardinality": "(1,1)" },
+        { "entity": "Professor", "cardinality": "(0,1)" }
+      ]
+    },
+    {
+      "name": "EspecializaFuncionario",
+      "x": 1800,
+      "y": 550,
+      "connections": [
+        { "entity": "Usuario", "cardinality": "(1,1)" },
+        { "entity": "Funcionario", "cardinality": "(0,1)" }
+      ]
+    },
+    {
+      "name": "EspecializaPublicoExterno",
+      "x": 2000,
+      "y": 550,
+      "connections": [
+        { "entity": "Usuario", "cardinality": "(1,1)" },
+        { "entity": "PublicoExterno", "cardinality": "(0,1)" }
+      ]
+    },
+
+    {
+      "name": "Realiza",
+      "x": 1400,
+      "y": 800,
+      "connections": [
+        { "entity": "Usuario", "cardinality": "(0,n)" },
+        { "entity": "Emprestimo", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Empresta",
+      "x": 900,
+      "y": 1000,
+      "connections": [
+        { "entity": "Exemplar", "cardinality": "(0,n)" },
+        { "entity": "Emprestimo", "cardinality": "(1,1)" }
+      ]
+    },
+
+    {
+      "name": "ReservaObra",
+      "x": 1800,
+      "y": 800,
+      "connections": [
+        { "entity": "Usuario", "cardinality": "(0,n)" },
+        { "entity": "Reserva", "cardinality": "(1,1)" }
+      ]
+    },
+
+    {
+      "name": "GeraMulta",
+      "x": 1400,
+      "y": 1150,
+      "connections": [
+        { "entity": "Emprestimo", "cardinality": "(0,1)" },
+        { "entity": "Multa", "cardinality": "(1,1)" }
+      ]
+    },
+
+    {
+      "name": "Renova",
+      "x": 1800,
+      "y": 1150,
+      "connections": [
+        { "entity": "Emprestimo", "cardinality": "(1,1)" },
+        { "entity": "Renovacao", "cardinality": "(0,n)" }
+      ]
+    },
+
+    {
+      "name": "Consulta",
+      "x": 2200,
+      "y": 800,
+      "connections": [
+        { "entity": "PublicoExterno", "cardinality": "(0,n)" },
+        { "entity": "ConsultaLocal", "cardinality": "(1,1)" }
+      ]
+    },
+
+    {
+      "name": "Periodo",
+      "x": 800,
+      "y": 1150,
+      "connections": [
+        { "entity": "Emprestimo", "cardinality": "(0,n)" },
+        { "entity": "PeriodoLetivo", "cardinality": "(0,1)" }
       ]
     }
   ]

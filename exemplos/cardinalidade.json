@@ -1,0 +1,70 @@
+{
+  "settings": {
+    "autoLayout": false
+  },
+  "entities": [
+    {
+      "name": "Entidade_Central",
+      "x": 600,
+      "y": 400
+    },
+    {
+      "name": "Entidade_Norte",
+      "x": 600,
+      "y": 100
+    },
+    {
+      "name": "Entidade_Sul",
+      "x": 600,
+      "y": 700
+    },
+    {
+      "name": "Entidade_Leste",
+      "x": 900,
+      "y": 400
+    },
+    {
+      "name": "Entidade_Oeste",
+      "x": 300,
+      "y": 400
+    }
+  ],
+  "relationships": [
+    {
+      "name": "Rel_Norte",
+      "x": 600,
+      "y": 250,
+      "connections": [
+        { "entity": "Entidade_Central", "cardinality": "(1,1)" },
+        { "entity": "Entidade_Norte", "cardinality": { "value": "(0,n)", "x": 580, "y": 180 } }
+      ]
+    },
+    {
+      "name": "Rel_Sul",
+      "x": 600,
+      "y": 550,
+      "connections": [
+        { "entity": "Entidade_Central", "cardinality": "(1,1)" },
+        { "entity": "Entidade_Sul", "cardinality": { "value": "(1,n)", "x": 630, "y": 620 } }
+      ]
+    },
+    {
+      "name": "Rel_Leste",
+      "x": 750,
+      "y": 400,
+      "connections": [
+        { "entity": "Entidade_Central", "cardinality": "(1,1)" },
+        { "entity": "Entidade_Leste", "cardinality": "(1,n)" } 
+      ]
+    },
+    {
+      "name": "Rel_Oeste",
+      "x": 450,
+      "y": 400,
+      "connections": [
+        { "entity": "Entidade_Central", "cardinality": "(0,1)" },
+        { "entity": "Entidade_Oeste", "cardinality": "(0,n)" }
+      ]
+    }
+  ]
+}

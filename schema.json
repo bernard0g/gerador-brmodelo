@@ -49,7 +49,20 @@
               "required": ["entity"],
               "properties": {
                 "entity": { "type": "string" },
-                "cardinality": { "type": "string", "enum": ["(0,1)", "(1,1)", "(0,n)", "(1,n)", "(n,1)"] }
+                "cardinality": {
+                  "anyOf": [
+                    { "type": "string", "enum": ["(0,1)", "(1,1)", "(0,n)", "(1,n)", "(n,1)"] },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "value": { "type": "string" },
+                        "x": { "type": "integer" },
+                        "y": { "type": "integer" }
+                      },
+                      "required": ["value"]
+                    }
+                  ]
+                }
               }
             }
           }

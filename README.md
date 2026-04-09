@@ -57,7 +57,7 @@ A nova arquitetura também fornece formalização via `schema.json`. O script en
       "identifying": true,
       "attributes": [],
       "connections": [
-        { "entity": "Funcionario", "cardinality": "(1,1)" },
+        { "entity": "Funcionario", "cardinality": { "value": "(1,1)", "x": 750, "y": 420 } },
         { "entity": "Dependente", "cardinality": "(0,n)" }
       ]
     }
@@ -78,6 +78,11 @@ A nova arquitetura também fornece formalização via `schema.json`. O script en
 - `"derived": true` -> Desenha Atributo Derivado (tracejado, equivalente ao Opcional em brM3).
 - `"composite": true` e `"components": [...]` -> Permite aninhar atributos em Atributos Compostos.
 
+### Posicionamento Independente de Cardinalidades
+As cardinalidades agora são renderizadas como **cidadãos visuais de primeira classe**.
+- O motor resolve colisões automaticamente! Passar `cardinality: "(0,n)"` ativará um Physics Engine de anti-colisão (Bounding Box) encontrando o offset perfeito das linhas.
+- Você pode forçar coordenadas manuais usando o modelo extendido: `{"value": "(0,n)", "x": 1050, "y": 620}` no lugar da string.
+
 ## Limitações Restantes
 - **Complexidade de Layout**: Embora tenha um Auto-Layout de anel funcional implementado (`settings.autoLayout`), o modelo dinâmico cruza muitas linhas em topologias gigantescas (fator intrínseco de grafos). Para o refinamento final e reposicionamento fino, basta arrastar os elementos visualmente no programa brModelo após a importação.
 - **Injeção de Cardinalidades Extras**: Apenas cardinalidades oficiais do framework brModelo sào mapeadas pelo Enum original. Extensões fora de `(0,n)`, `(1,n)`, `(1,1)`, `(0,1)` caem pro comportamento default.
@@ -86,4 +91,5 @@ A nova arquitetura também fornece formalização via `schema.json`. O script en
 A arquitetura de alto-nível injeta os conceitos na API nativa do `chcandido` lendo comportamentos profundos do motor de layout:
 - Relacionamentos Identificadores e Entidades Fracas se conectam instruindo via Java `ligacao.setDuplaLinha(true)` nas ligações em vez de alterar a tipagem da entidade diretamente, como mapeado pelo jar oficial.
 - Generalizações operam injetando subclasses `Especializacao(dia)` com o motor do brM3 resolvendo exclusividades.
+- A cardinalidade é separada de sua amarra restrita pela instrução `PreCardinalidade.setMovimentacaoManual(true)` mais a conversão de coordenadas independentes `setLocation(X,Y)`.
 - A orquestração Java isola o usuário Python de lidar com os pipelines `Reenquadre`, `Add(Item)` e fluxos do OutputStream Binário `GuardaPadraoBrM`.
