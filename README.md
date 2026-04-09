@@ -3,7 +3,7 @@ Um conversor inteligente em Python que transforma arquivos JSON em diagramas nat
 
 Criei esse script como uma ponte programática nativa. Ele atua sob o motor do brModelo (invocando o `brModelo.jar` internamente) para montar e gravar o modelo com a mesma exatidão e qualidade da ferramenta original, impossibilitando qualquer corrupção gráfica.
 
-## Como funciona
+## 🚀 Como funciona
 A arquitetura é Híbrida:
 1. O Python lê a estrutura JSON de entrada.
 2. Injeta as entidades, relacionamentos e ligações em um código Java dinâmico.
@@ -12,11 +12,13 @@ A arquitetura é Híbrida:
 
 Ideal para montar topologias rapidamente vindas de Engenharia de Prompts ou IA Generativa!
 
-## Requisitos
+## 📦 Requisitos
 - **Python 3.x**
 - **Java JDK (ex: Microsoft OpenJDK)**: Certifique-se de que o `javac` e o `java` estejam instalados e no seu PATH do sistema (ou no diretório comum).
 
-## Como Usar
+## 🛠️ Como Usar
+
+> **⚠️ IMPORTANTE:** Este script (`generator.py`) obrigatoriamente precisa estar **na mesma pasta** que o arquivo `brModelo.jar` para conseguir invocar as classes nativas do sistema durante a geração do diagrama. A pasta atual do repositório já contém a arquitetura pronta.
 
 Com seu JSON pronto, abra o terminal e execute:
 ```bash
@@ -28,7 +30,7 @@ python generator.py <seu_arquivo.json> <nome_saida.brM3>
 python generator.py exemplo.json meu_diagrama.brM3
 ```
 
-## Formato JSON Esperado
+## 📝 Formato JSON Esperado
 O script entende um formato simples focado nas cardinalidades e nós:
 
 ```json
