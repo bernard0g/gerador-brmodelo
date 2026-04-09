@@ -248,8 +248,8 @@ public class BrmAutoGenerator {
             lig_{i}_{j}.SuperInicie(0, 
                 new Point({ent_var}.getLeft() + {ent_var}.getWidth()/2, {ent_var}.getTop() + {ent_var}.getHeight()/2),
                 new Point({rel_var}.getLeft() + {rel_var}.getWidth()/2, {rel_var}.getTop() + {rel_var}.getHeight()/2));
-            lig_{i}_{j}.getPontaA().SetEm({ent_var});
-            lig_{i}_{j}.getPontaB().SetEm({rel_var});
+            lig_{i}_{j}.FormasALigar = new desenho.formas.Forma[] {{ {ent_var}, {rel_var} }};
+            lig_{i}_{j}.Ligar();
             lig_{i}_{j}.PrepareCardinalidade();
             if (lig_{i}_{j}.getCard() != null) {{
                 lig_{i}_{j}.getCard().setCard({card_enum});
@@ -282,8 +282,8 @@ public class BrmAutoGenerator {
             lig_sup_{i}.SuperInicie(0, 
                 new Point({super_var}.getLeft() + {super_var}.getWidth()/2, {super_var}.getTop() + {super_var}.getHeight()/2),
                 new Point(esp_{i}.getLeft() + esp_{i}.getWidth()/2, esp_{i}.getTop() + esp_{i}.getHeight()/2));
-            lig_sup_{i}.getPontaA().SetEm({super_var});
-            lig_sup_{i}.getPontaB().SetEm(esp_{i});
+            lig_sup_{i}.FormasALigar = new desenho.formas.Forma[] {{ {super_var}, esp_{i} }};
+            lig_sup_{i}.Ligar();
             dia.getListaDeItens().add(lig_sup_{i});
 """
             for j, sub in enumerate(gen.get("subtypes", [])):
@@ -294,8 +294,8 @@ public class BrmAutoGenerator {
             lig_sub_{i}_{j}.SuperInicie(0, 
                 new Point(esp_{i}.getLeft() + esp_{i}.getWidth()/2, esp_{i}.getTop() + esp_{i}.getHeight()/2),
                 new Point({sub_var}.getLeft() + {sub_var}.getWidth()/2, {sub_var}.getTop() + {sub_var}.getHeight()/2));
-            lig_sub_{i}_{j}.getPontaA().SetEm(esp_{i});
-            lig_sub_{i}_{j}.getPontaB().SetEm({sub_var});
+            lig_sub_{i}_{j}.FormasALigar = new desenho.formas.Forma[] {{ esp_{i}, {sub_var} }};
+            lig_sub_{i}_{j}.Ligar();
             dia.getListaDeItens().add(lig_sub_{i}_{j});
 """
 
@@ -374,8 +374,8 @@ def build_attributes(parent_var, ax, ay, attrs):
             l_{attr_var}.SuperInicie(0, 
                 new Point({parent_var}.getLeft() + {parent_var}.getWidth()/2, {parent_var}.getTop() + {parent_var}.getHeight()/2),
                 new Point({attr_var}.getLeft() + {attr_var}.getWidth()/2, {attr_var}.getTop() + {attr_var}.getHeight()/2));
-            l_{attr_var}.getPontaA().SetEm({parent_var});
-            l_{attr_var}.getPontaB().SetEm({attr_var});
+            l_{attr_var}.FormasALigar = new desenho.formas.Forma[] {{ {parent_var}, {attr_var} }};
+            l_{attr_var}.Ligar();
             dia.getListaDeItens().add(l_{attr_var});
 """
         if attr.get("composite", False) and attr.get("components"):
@@ -394,8 +394,8 @@ def build_attributes(parent_var, ax, ay, attrs):
             l_{sub_var}.SuperInicie(0, 
                 new Point({attr_var}.getLeft() + {attr_var}.getWidth()/2, {attr_var}.getTop() + {attr_var}.getHeight()/2),
                 new Point({sub_var}.getLeft() + {sub_var}.getWidth()/2, {sub_var}.getTop() + {sub_var}.getHeight()/2));
-            l_{sub_var}.getPontaA().SetEm({attr_var});
-            l_{sub_var}.getPontaB().SetEm({sub_var});
+            l_{sub_var}.FormasALigar = new desenho.formas.Forma[] {{ {attr_var}, {sub_var} }};
+            l_{sub_var}.Ligar();
             dia.getListaDeItens().add(l_{sub_var});
 """
     return res

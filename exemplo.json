@@ -3,194 +3,218 @@
     "autoLayout": false
   },
   "entities": [
-    { "name": "Autor", "x": 100, "y": 100 },
-    { "name": "Editora", "x": 500, "y": 100 },
-    { "name": "Tema", "x": 900, "y": 100 },
-
-    { "name": "Obra", "x": 500, "y": 400 },
-    { "name": "Livro", "x": 200, "y": 700 },
-    { "name": "Periodico", "x": 800, "y": 700 },
-
-    { "name": "Exemplar", "x": 500, "y": 1000 },
-
-    { "name": "Usuario", "x": 1600, "y": 400 },
-    { "name": "Aluno", "x": 1300, "y": 700 },
-    { "name": "Professor", "x": 1600, "y": 700 },
-    { "name": "Funcionario", "x": 1900, "y": 700 },
-    { "name": "PublicoExterno", "x": 2200, "y": 700 },
-
-    { "name": "Emprestimo", "x": 1400, "y": 1000 },
-    { "name": "Reserva", "x": 1800, "y": 1000 },
-
-    { "name": "Multa", "x": 1400, "y": 1300 },
-    { "name": "Renovacao", "x": 1800, "y": 1300 },
-    { "name": "ConsultaLocal", "x": 2200, "y": 1000 },
-
-    { "name": "PeriodoLetivo", "x": 800, "y": 1300 }
+    {
+      "name": "Autor",
+      "x": 500, "y": 1000,
+      "attributes": [
+        { "name": "id_autor", "key": true },
+        { "name": "nome_autor" }
+      ]
+    },
+    {
+      "name": "Editora",
+      "x": 1500, "y": 200,
+      "attributes": [
+        { "name": "id_editora", "key": true },
+        { "name": "nome_fantasia" },
+        { "name": "cnpj" }
+      ]
+    },
+    {
+      "name": "Tema",
+      "x": 2500, "y": 1000,
+      "attributes": [
+        { "name": "id_tema", "key": true },
+        { "name": "descricao_tema" }
+      ]
+    },
+    {
+      "name": "Obra",
+      "x": 1500, "y": 1000,
+      "attributes": [
+        { "name": "id_obra", "key": true },
+        { "name": "titulo" },
+        { "name": "ano_publicacao" }
+      ]
+    },
+    {
+      "name": "Livro",
+      "x": 1100, "y": 1600,
+      "attributes": [
+        { "name": "isbn", "key": true },
+        { "name": "edicao" }
+      ]
+    },
+    {
+      "name": "Periodico",
+      "x": 1900, "y": 1600,
+      "attributes": [
+        { "name": "issn", "key": true },
+        { "name": "volume" }
+      ]
+    },
+    {
+      "name": "Exemplar",
+      "weak": true,
+      "x": 2500, "y": 1600,
+      "attributes": [
+        { "name": "numero_exemplar", "partial_key": true },
+        { "name": "disponivel" },
+        { "name": "eh_unico" }
+      ]
+    },
+    {
+      "name": "Emprestimo",
+      "x": 2500, "y": 2400,
+      "attributes": [
+        { "name": "id_emprestimo", "key": true },
+        { "name": "data_retirada" },
+        { "name": "data_prevista" },
+        { "name": "data_devolucao" },
+        { "name": "qtd_renovacoes" }
+      ]
+    },
+    {
+      "name": "Multa",
+      "weak": true,
+      "x": 3300, "y": 2400,
+      "attributes": [
+        { "name": "id_multa", "partial_key": true },
+        { "name": "valor_penalizacao" },
+        { "name": "data_pagamento" },
+        { "name": "quitada" }
+      ]
+    },
+    {
+      "name": "Usuario",
+      "x": 1500, "y": 2400,
+      "attributes": [
+        { "name": "id_usuario", "key": true },
+        { "name": "nome_completo", "composite": true, "components": [{"name": "primeiro_nome"}, {"name": "sobrenome"}] },
+        { "name": "email" },
+        { "name": "telefones", "multivalued": true }
+      ]
+    },
+    {
+      "name": "Aluno",
+      "x": 700, "y": 3200,
+      "attributes": [
+        { "name": "rm_aluno", "key": true }
+      ]
+    },
+    {
+      "name": "Professor",
+      "x": 1200, "y": 3200,
+      "attributes": [
+        { "name": "matricula_prof", "key": true }
+      ]
+    },
+    {
+      "name": "Funcionario",
+      "x": 1700, "y": 3200,
+      "attributes": [
+        { "name": "matricula_func", "key": true }
+      ]
+    },
+    {
+      "name": "Externo",
+      "x": 2200, "y": 3200,
+      "attributes": [
+        { "name": "rg_externo", "key": true }
+      ]
+    }
   ],
-
   "relationships": [
     {
       "name": "Escreve",
-      "x": 250,
-      "y": 200,
+      "x": 1000, "y": 1000,
+      "attributes": [],
       "connections": [
-        { "entity": "Autor", "cardinality": "(0,n)" },
+        { "entity": "Autor", "cardinality": "(1,n)" },
         { "entity": "Obra", "cardinality": "(1,n)" }
       ]
     },
     {
       "name": "Publica",
-      "x": 500,
-      "y": 200,
+      "x": 1500, "y": 600,
+      "attributes": [],
       "connections": [
-        { "entity": "Editora", "cardinality": "(0,n)" },
+        { "entity": "Editora", "cardinality": "(1,n)" },
         { "entity": "Obra", "cardinality": "(1,1)" }
       ]
     },
     {
-      "name": "Classifica",
-      "x": 800,
-      "y": 200,
+      "name": "Classificada_Como",
+      "x": 2000, "y": 1000,
+      "attributes": [],
       "connections": [
-        { "entity": "Tema", "cardinality": "(0,n)" },
-        { "entity": "Obra", "cardinality": "(1,n)" }
-      ]
-    },
-
-    {
-      "name": "TipoLivro",
-      "x": 300,
-      "y": 550,
-      "connections": [
-        { "entity": "Obra", "cardinality": "(1,1)" },
-        { "entity": "Livro", "cardinality": "(0,1)" }
+        { "entity": "Obra", "cardinality": "(1,n)" },
+        { "entity": "Tema", "cardinality": "(1,n)" }
       ]
     },
     {
-      "name": "TipoPeriodico",
-      "x": 700,
-      "y": 550,
-      "connections": [
-        { "entity": "Obra", "cardinality": "(1,1)" },
-        { "entity": "Periodico", "cardinality": "(0,1)" }
-      ]
-    },
-
-    {
-      "name": "Materializa",
-      "x": 500,
-      "y": 850,
+      "name": "Possui",
+      "identifying": true,
+      "x": 2000, "y": 1300,
+      "attributes": [],
       "connections": [
         { "entity": "Obra", "cardinality": "(1,1)" },
         { "entity": "Exemplar", "cardinality": "(0,n)" }
       ]
     },
-
     {
-      "name": "EspecializaAluno",
-      "x": 1400,
-      "y": 550,
-      "connections": [
-        { "entity": "Usuario", "cardinality": "(1,1)" },
-        { "entity": "Aluno", "cardinality": "(0,1)" }
-      ]
-    },
-    {
-      "name": "EspecializaProfessor",
-      "x": 1600,
-      "y": 550,
-      "connections": [
-        { "entity": "Usuario", "cardinality": "(1,1)" },
-        { "entity": "Professor", "cardinality": "(0,1)" }
-      ]
-    },
-    {
-      "name": "EspecializaFuncionario",
-      "x": 1800,
-      "y": 550,
-      "connections": [
-        { "entity": "Usuario", "cardinality": "(1,1)" },
-        { "entity": "Funcionario", "cardinality": "(0,1)" }
-      ]
-    },
-    {
-      "name": "EspecializaPublicoExterno",
-      "x": 2000,
-      "y": 550,
-      "connections": [
-        { "entity": "Usuario", "cardinality": "(1,1)" },
-        { "entity": "PublicoExterno", "cardinality": "(0,1)" }
-      ]
-    },
-
-    {
-      "name": "Realiza",
-      "x": 1400,
-      "y": 800,
+      "name": "Lista_Espera",
+      "x": 1500, "y": 1700,
+      "attributes": [
+        { "name": "data_solicitacao" },
+        { "name": "posicao_fila" }
+      ],
       "connections": [
         { "entity": "Usuario", "cardinality": "(0,n)" },
-        { "entity": "Emprestimo", "cardinality": "(1,1)" }
+        { "entity": "Obra", "cardinality": "(0,n)" }
       ]
     },
     {
-      "name": "Empresta",
-      "x": 900,
-      "y": 1000,
+      "name": "Item_Emprestado",
+      "x": 2500, "y": 2000,
+      "attributes": [],
       "connections": [
         { "entity": "Exemplar", "cardinality": "(0,n)" },
         { "entity": "Emprestimo", "cardinality": "(1,1)" }
       ]
     },
-
     {
-      "name": "ReservaObra",
-      "x": 1800,
-      "y": 800,
-      "connections": [
-        { "entity": "Usuario", "cardinality": "(0,n)" },
-        { "entity": "Reserva", "cardinality": "(1,1)" }
-      ]
-    },
-
-    {
-      "name": "GeraMulta",
-      "x": 1400,
-      "y": 1150,
-      "connections": [
-        { "entity": "Emprestimo", "cardinality": "(0,1)" },
-        { "entity": "Multa", "cardinality": "(1,1)" }
-      ]
-    },
-
-    {
-      "name": "Renova",
-      "x": 1800,
-      "y": 1150,
+      "name": "Gera_Penalizacao",
+      "identifying": true,
+      "x": 2900, "y": 2400,
+      "attributes": [],
       "connections": [
         { "entity": "Emprestimo", "cardinality": "(1,1)" },
-        { "entity": "Renovacao", "cardinality": "(0,n)" }
+        { "entity": "Multa", "cardinality": "(0,1)" }
       ]
     },
-
     {
-      "name": "Consulta",
-      "x": 2200,
-      "y": 800,
+      "name": "Realiza",
+      "x": 2000, "y": 2400,
+      "attributes": [],
       "connections": [
-        { "entity": "PublicoExterno", "cardinality": "(0,n)" },
-        { "entity": "ConsultaLocal", "cardinality": "(1,1)" }
+        { "entity": "Usuario", "cardinality": "(0,n)" },
+        { "entity": "Emprestimo", "cardinality": "(1,1)" }
       ]
+    }
+  ],
+  "generalizations": [
+    {
+      "supertype": "Obra",
+      "subtypes": ["Livro", "Periodico"],
+      "total": false,
+      "x": 1500, "y": 1300
     },
-
     {
-      "name": "Periodo",
-      "x": 800,
-      "y": 1150,
-      "connections": [
-        { "entity": "Emprestimo", "cardinality": "(0,n)" },
-        { "entity": "PeriodoLetivo", "cardinality": "(0,1)" }
-      ]
+      "supertype": "Usuario",
+      "subtypes": ["Aluno", "Professor", "Funcionario", "Externo"],
+      "total": true,
+      "x": 1500, "y": 2800
     }
   ]
 }
