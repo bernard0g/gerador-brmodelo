@@ -1,0 +1,34 @@
+{
+  "settings": {
+    "autoLayout": true
+  },
+  "entities": [
+    {
+      "name": "Dependente",
+      "weak": true,
+      "attributes": [
+        { "name": "id_dependente", "partial_key": true },
+        { "name": "nome_completo" },
+        { "name": "parentesco" }
+      ]
+    },
+    {
+      "name": "Funcionario",
+      "attributes": [
+        { "name": "cpf", "key": true },
+        { "name": "nome" },
+        { "name": "data_nasc" }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "name": "Possui",
+      "identifying": true,
+      "connections": [
+        { "entity": "Funcionario", "cardinality": "(1,1)" },
+        { "entity": "Dependente", "cardinality": "(0,n)" }
+      ]
+    }
+  ]
+}

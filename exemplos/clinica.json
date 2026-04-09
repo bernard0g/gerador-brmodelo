@@ -1,0 +1,50 @@
+{
+  "settings": {
+    "autoLayout": true
+  },
+  "entities": [
+    {
+      "name": "Medico",
+      "attributes": [
+        { "name": "crm", "key": true },
+        { "name": "nome" },
+        { "name": "especialidades", "multivalued": true }
+      ]
+    },
+    {
+      "name": "Paciente",
+      "attributes": [
+        { "name": "id_paciente", "key": true },
+        { "name": "nome" },
+        { "name": "data_nascimento" },
+        { "name": "idade", "derived": true }
+      ]
+    },
+    {
+      "name": "Consulta",
+      "weak": true,
+      "attributes": [
+        { "name": "data_hora", "partial_key": true },
+        { "name": "sala" },
+        { "name": "sintomas" }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "name": "Atende",
+      "identifying": true,
+      "connections": [
+        { "entity": "Medico", "cardinality": "(1,1)" },
+        { "entity": "Consulta", "cardinality": "(0,n)" }
+      ]
+    },
+    {
+      "name": "Realiza_Consulta",
+      "connections": [
+        { "entity": "Paciente", "cardinality": "(1,1)" },
+        { "entity": "Consulta", "cardinality": "(0,n)" }
+      ]
+    }
+  ]
+}

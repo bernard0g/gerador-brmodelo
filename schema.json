@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "brModelo JSON Generator Schema",
+  "type": "object",
+  "properties": {
+    "settings": {
+      "type": "object",
+      "properties": {
+        "autoLayout": { "type": "boolean", "default": false },
+        "layoutDirection": { "type": "string" },
+        "attributeLayout": { "type": "string" }
+      }
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "x": { "type": "integer" },
+          "y": { "type": "integer" },
+          "weak": { "type": "boolean", "default": false },
+          "attributes": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/attribute" }
+          }
+        }
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "x": { "type": "integer" },
+          "y": { "type": "integer" },
+          "identifying": { "type": "boolean", "default": false },
+          "attributes": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/attribute" }
+          },
+          "connections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["entity"],
+              "properties": {
+                "entity": { "type": "string" },
+                "cardinality": { "type": "string", "enum": ["(0,1)", "(1,1)", "(0,n)", "(1,n)", "(n,1)"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "generalizations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["supertype", "subtypes"],
+        "properties": {
+          "supertype": { "type": "string" },
+          "subtypes": { "type": "array", "items": { "type": "string" } },
+          "x": { "type": "integer" },
+          "y": { "type": "integer" },
+          "total": { "type": "boolean", "default": false },
+          "disjoint": { "type": "boolean", "default": true }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "attribute": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "key": { "type": "boolean", "default": false },
+        "partial_key": { "type": "boolean", "default": false },
+        "multivalued": { "type": "boolean", "default": false },
+        "derived": { "type": "boolean", "default": false },
+        "composite": { "type": "boolean", "default": false },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

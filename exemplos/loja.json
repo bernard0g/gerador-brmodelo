@@ -1,0 +1,51 @@
+{
+  "settings": {
+    "autoLayout": true
+  },
+  "entities": [
+    {
+      "name": "Cliente",
+      "attributes": [
+        { "name": "id_cliente", "key": true },
+        { "name": "nome_completo", "composite": true, "components": [{"name": "primeiro_nome"}, {"name": "sobrenome"}] },
+        { "name": "telefones", "multivalued": true }
+      ]
+    },
+    {
+      "name": "Produto",
+      "attributes": [
+        { "name": "codigo", "key": true },
+        { "name": "descricao" },
+        { "name": "preco" }
+      ]
+    },
+    {
+      "name": "Pedido",
+      "attributes": [
+        { "name": "num_pedido", "key": true },
+        { "name": "data_emissao" },
+        { "name": "valor_total", "derived": true }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "name": "Realiza",
+      "connections": [
+        { "entity": "Cliente", "cardinality": "(1,1)" },
+        { "entity": "Pedido", "cardinality": "(0,n)" }
+      ]
+    },
+    {
+      "name": "Contem",
+      "attributes": [
+        { "name": "quantidade" },
+        { "name": "preco_venda" }
+      ],
+      "connections": [
+        { "entity": "Pedido", "cardinality": "(1,n)" },
+        { "entity": "Produto", "cardinality": "(0,n)" }
+      ]
+    }
+  ]
+}

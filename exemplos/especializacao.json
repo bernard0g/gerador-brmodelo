@@ -1,0 +1,36 @@
+{
+  "settings": {
+    "autoLayout": true
+  },
+  "entities": [
+    {
+      "name": "Pessoa",
+      "attributes": [
+        { "name": "cpf", "key": true },
+        { "name": "nome" }
+      ]
+    },
+    {
+      "name": "Fisica",
+      "attributes": [
+        { "name": "rg" }
+      ]
+    },
+    {
+      "name": "Juridica",
+      "attributes": [
+        { "name": "cnpj", "key": true },
+        { "name": "fantasia" }
+      ]
+    }
+  ],
+  "relationships": [],
+  "generalizations": [
+    {
+      "supertype": "Pessoa",
+      "subtypes": ["Fisica", "Juridica"],
+      "total": true,
+      "disjoint": true
+    }
+  ]
+}

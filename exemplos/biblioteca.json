@@ -1,0 +1,195 @@
+{
+  "settings": {
+    "autoLayout": true
+  },
+  "entities": [
+    {
+      "name": "Autor",
+      "attributes": [
+        { "name": "id_autor", "key": true },
+        { "name": "nome" },
+        { "name": "nacionalidade" }
+      ]
+    },
+    {
+      "name": "Obra",
+      "attributes": [
+        { "name": "codigo", "key": true },
+        { "name": "titulo" },
+        { "name": "ano_publicacao" }
+      ]
+    },
+    {
+      "name": "Livro",
+      "attributes": [
+        { "name": "isbn" },
+        { "name": "edicao" }
+      ]
+    },
+    {
+      "name": "Periodico",
+      "attributes": [
+        { "name": "issn" }
+      ]
+    },
+    {
+      "name": "Editora",
+      "attributes": [
+        { "name": "id_editora", "key": true },
+        { "name": "nome" }
+      ]
+    },
+    {
+      "name": "Exemplar",
+      "weak": true,
+      "attributes": [
+        { "name": "num_tombo", "partial_key": true },
+        { "name": "disponivel" },
+        { "name": "tipo" }
+      ]
+    },
+    {
+      "name": "Usuario",
+      "attributes": [
+        { "name": "id_usuario", "key": true },
+        { "name": "nome" },
+        { "name": "penalizado", "derived": true }
+      ]
+    },
+    {
+      "name": "Aluno",
+      "attributes": [ { "name": "ra" } ]
+    },
+    {
+      "name": "Professor",
+      "attributes": [ { "name": "departamento" } ]
+    },
+    {
+      "name": "Funcionario",
+      "attributes": [ { "name": "setor" } ]
+    },
+    {
+      "name": "PublicoExterno",
+      "attributes": [ { "name": "taxa_paga" } ]
+    },
+    {
+      "name": "Emprestimo",
+      "weak": true,
+      "attributes": [
+        { "name": "id_emprestimo", "partial_key": true },
+        { "name": "data_retirada" },
+        { "name": "data_prevista" },
+        { "name": "data_devolucao" },
+        { "name": "renovacoes_restantes" }
+      ]
+    },
+    {
+      "name": "Reserva",
+      "weak": true,
+      "attributes": [
+        { "name": "data_reserva", "partial_key": true },
+        { "name": "atendida" }
+      ]
+    },
+    {
+      "name": "Multa",
+      "weak": true,
+      "attributes": [
+        { "name": "id_multa", "partial_key": true },
+        { "name": "valor" },
+        { "name": "paga" }
+      ]
+    },
+    {
+      "name": "PeriodoLetivo",
+      "attributes": [
+        { "name": "id_periodo", "key": true },
+        { "name": "data_inicio" },
+        { "name": "data_fim" }
+      ]
+    }
+  ],
+  "generalizations": [
+    {
+      "supertype": "Obra",
+      "subtypes": ["Livro", "Periodico"],
+      "total": true,
+      "disjoint": true
+    },
+    {
+      "supertype": "Usuario",
+      "subtypes": ["Aluno", "Professor", "Funcionario", "PublicoExterno"],
+      "total": true,
+      "disjoint": true
+    }
+  ],
+  "relationships": [
+    {
+      "name": "Escreve",
+      "connections": [
+        { "entity": "Autor", "cardinality": "(1,n)" },
+        { "entity": "Obra", "cardinality": "(0,n)" }
+      ]
+    },
+    {
+      "name": "Publica",
+      "connections": [
+        { "entity": "Editora", "cardinality": "(0,n)" },
+        { "entity": "Obra", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Materializa",
+      "identifying": true,
+      "connections": [
+        { "entity": "Obra", "cardinality": "(1,1)" },
+        { "entity": "Exemplar", "cardinality": "(0,n)" }
+      ]
+    },
+    {
+      "name": "Faz",
+      "identifying": true,
+      "connections": [
+        { "entity": "Usuario", "cardinality": "(1,1)" },
+        { "entity": "Emprestimo", "cardinality": "(0,n)" }
+      ]
+    },
+    {
+      "name": "Envolve",
+      "connections": [
+        { "entity": "Emprestimo", "cardinality": "(0,n)" },
+        { "entity": "Exemplar", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Gera",
+      "identifying": true,
+      "connections": [
+        { "entity": "Emprestimo", "cardinality": "(1,1)" },
+        { "entity": "Multa", "cardinality": "(0,1)" }
+      ]
+    },
+    {
+      "name": "Lista_Espera",
+      "identifying": true,
+      "connections": [
+        { "entity": "Usuario", "cardinality": "(1,1)" },
+        { "entity": "Reserva", "cardinality": "(0,n)" }
+      ]
+    },
+    {
+      "name": "Reserva_Para",
+      "connections": [
+        { "entity": "Reserva", "cardinality": "(0,n)" },
+        { "entity": "Obra", "cardinality": "(1,1)" }
+      ]
+    },
+    {
+      "name": "Vigora",
+      "connections": [
+        { "entity": "PeriodoLetivo", "cardinality": "(0,n)" },
+        { "entity": "Emprestimo", "cardinality": "(0,n)" }
+      ]
+    }
+  ]
+}
